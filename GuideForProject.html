@@ -1,0 +1,1139 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>RFID project Code and Ideas</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="194bc05c-f968-807d-8517-fbe6d4f87552" class="page sans"><header><h1 class="page-title">RFID project Code and Ideas</h1><p class="page-description"></p></header><div class="page-body"><figure id="194bc05c-f968-8056-a5fb-d3fa30e1d543"><a href="https://pimylifeup.com/raspberry-pi-rfid-rc522/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">How to setup a Raspberry Pi RFID RC522 Chip</div><div class="bookmark-description">Set up a RFID reader for the Pi.</div></div><div class="bookmark-href"><img src="https://pimylifeup.com/wp-content/uploads/2021/02/cropped-pi-favicon-1-192x192.png" class="icon bookmark-icon"/>https://pimylifeup.com/raspberry-pi-rfid-rc522/</div></div><img src="https://pimylifeup.com/wp-content/uploads/2017/10/Raspberry-Pi-RFID-Reader-no-wm.jpg" class="bookmark-image"/></a></figure><ul id="194bc05c-f968-807b-bcb4-fdc82180be27" class="toggle"><li><details open=""><summary>Simple Attacker and Defender side Implmentaion Security code</summary><p id="194bc05c-f968-80b0-a9d1-f5786f40b8f7" class="">Here&#x27;s a structured approach for implementing cybersecurity features in your RFID project:</p><h3 id="194bc05c-f968-801a-b521-dbab5d9fe380" class="">1. Attacker Side Implementation (RFID Attacks)</h3><h3 id="194bc05c-f968-80b3-9a89-c79c454fe60e" class="">a) RFID Cloning Attack Script (<code>attacker_clone.py</code>)</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8003-bf01-c681ec02090a" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import time
+
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Place original tag to clone&quot;)
+    id, original_data = reader.read()
+    print(f&quot;Captured Data - ID: {id}, Data: {original_data}&quot;)
+
+    time.sleep(2)
+
+    print(&quot;Place new tag to write cloned data&quot;)
+    reader.write(original_data)
+    print(&quot;Cloning complete!&quot;)
+
+finally:
+    GPIO.cleanup()</code></pre><h3 id="194bc05c-f968-80c3-b295-d8d02ba80876" class="">b) RFID Eavesdropping Script (<code>attacker_eavesdrop.py</code>)</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-80a5-b640-e83cc75e1968" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import datetime
+
+reader = SimpleMFRC522()
+
+def log_data(data):
+    with open(&quot;rfid_log.txt&quot;, &quot;a&quot;) as f:
+        f.write(f&quot;{datetime.datetime.now()} - {data}\n&quot;)
+
+try:
+    print(&quot;Starting RFID eavesdropping...&quot;)
+    while True:
+        id, text = reader.read_no_block()
+        if id:
+            print(f&quot;Intercepted Data - ID: {id}, Content: {text}&quot;)
+            log_data(f&quot;ID: {id}, Content: {text}&quot;)
+        time.sleep(0.1)
+
+finally:
+    GPIO.cleanup()</code></pre><h3 id="194bc05c-f968-8038-89f2-c101f10c9f3b" class="">2. Defender Side Implementation (Security Measures)</h3><h3 id="194bc05c-f968-80b9-a9b0-ea18e86ba929" class="">a) Encrypted RFID Writer (<code>defender_encrypt_write.py</code>)</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8058-a3ff-e8d3d01fc319" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+from Crypto.Cipher import AES
+import base64
+
+KEY = b&#x27;Sixteen byte key&#x27;
+cipher = AES.new(KEY, AES.MODE_ECB)
+
+reader = SimpleMFRC522()
+
+def pad(s): return s + ((16 - len(s) % 16) * &#x27;{&#x27;)
+
+try:
+    text = input(&#x27;New data:&#x27;)
+    encrypted = cipher.encrypt(pad(text).encode())
+    b64_encrypted = base64.b64encode(encrypted)
+    print(&quot;Now place your tag to write&quot;)
+    reader.write(b64_encrypted.decode())
+    print(&quot;Encrypted data written&quot;)
+
+finally:
+    GPIO.cleanup()</code></pre><h3 id="194bc05c-f968-80a7-90b9-ef48c4e3b36d" class="">b) Encrypted RFID Reader (<code>defender_decrypt_read.py</code>)</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-80f6-8ffc-ef116ff3185a" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+from Crypto.Cipher import AES
+import base64
+
+KEY = b&#x27;Sixteen byte key&#x27;
+cipher = AES.new(KEY, AES.MODE_ECB)
+
+reader = SimpleMFRC522()
+
+def unpad(s): return s.replace(&#x27;{&#x27;, &#x27;&#x27;)
+
+try:
+    id, text = reader.read()
+    decrypted = cipher.decrypt(base64.b64decode(text.encode())).decode()
+    print(f&quot;Decrypted Data: {unpad(decrypted)}&quot;)
+
+finally:
+    GPIO.cleanup()</code></pre><h3 id="194bc05c-f968-8065-8810-ff57cfda3c65" class="">c) RFID Intrusion Detection System (<code>defender_ids.py</code>)</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8079-91f2-fc0b28ab50f7" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import time
+
+reader = SimpleMFRC522()
+last_read = time.time()
+read_count = 0
+
+def alert():
+    print(&quot;Intrusion Detected! Multiple RFID read attempts detected!&quot;)
+
+try:
+    while True:
+        id, text = reader.read_no_block()
+        if id:
+            read_count += 1
+            current_time = time.time()
+
+            if current_time - last_read &lt; 2 and read_count &gt; 3:
+                alert()
+                read_count = 0
+
+            last_read = current_time
+            print(f&quot;Valid read: {text}&quot;)
+
+        time.sleep(0.5)
+
+finally:
+    GPIO.cleanup()</code></pre><h3 id="194bc05c-f968-80ab-8f43-f0a5a139a675" class="">3. Thesis Report Outline</h3><p id="194bc05c-f968-80b3-a60f-debe3a82c9f1" class=""><strong>Title:</strong> Research and Implementation of Radio Frequency Attacks Using IoT Devices and Cybersecurity Techniques to Access Critical Assets</p><p id="194bc05c-f968-80f6-b538-d5609af2734a" class=""><strong>I. Introduction</strong></p><ul id="194bc05c-f968-809f-bd9d-fad20e6fa81a" class="bulleted-list"><li style="list-style-type:disc">RFID technology overview</li></ul><ul id="194bc05c-f968-80b1-aabc-f0372fd9c538" class="bulleted-list"><li style="list-style-type:disc">Cybersecurity risks in IoT devices</li></ul><ul id="194bc05c-f968-80fe-9373-c3bd11badb78" class="bulleted-list"><li style="list-style-type:disc">Project significance</li></ul><p id="194bc05c-f968-809b-acd6-cee6fe510ded" class=""><strong>II. Attack Vectors Implemented</strong></p><ol type="1" id="194bc05c-f968-80c2-ab29-e437473411d4" class="numbered-list" start="1"><li>RFID Cloning Attacks</li></ol><ol type="1" id="194bc05c-f968-8093-940f-e5c954b9f08a" class="numbered-list" start="2"><li>Eavesdropping Vulnerabilities</li></ol><ol type="1" id="194bc05c-f968-80c4-b606-d9bf8e0dc007" class="numbered-list" start="3"><li>Security Implications</li></ol><p id="194bc05c-f968-8039-a7d6-eda8753e0612" class=""><strong>III. Defense Mechanisms</strong></p><ol type="1" id="194bc05c-f968-8010-a90a-ea935548ad37" class="numbered-list" start="1"><li>AES Encryption Implementation</li></ol><ol type="1" id="194bc05c-f968-80e1-a424-fecf56c0e74f" class="numbered-list" start="2"><li>Intrusion Detection System</li></ol><ol type="1" id="194bc05c-f968-8086-a7b5-de5353c721c4" class="numbered-list" start="3"><li>Security Throughput Analysis</li></ol><p id="194bc05c-f968-8006-96f4-c4e4caad7dfd" class=""><strong>IV. Experimental Setup</strong></p><ul id="194bc05c-f968-805a-ba7b-dd1bd81a23bd" class="bulleted-list"><li style="list-style-type:disc">Hardware components (Raspberry Pi 4, RFID-RC522)</li></ul><ul id="194bc05c-f968-8013-ad3f-c0da903899f3" class="bulleted-list"><li style="list-style-type:disc">Software stack (Python libraries, cryptographic modules)</li></ul><ul id="194bc05c-f968-80ab-acbd-d08233423eae" class="bulleted-list"><li style="list-style-type:disc">Test environment configuration</li></ul><p id="194bc05c-f968-80cb-beba-c41b1e3ff5fd" class=""><strong>V. Results &amp; Analysis</strong></p><ul id="194bc05c-f968-80a3-9340-cb2e6dd9f5ce" class="bulleted-list"><li style="list-style-type:disc">Cloning attack success rates</li></ul><ul id="194bc05c-f968-8058-916e-ff7f587c2f6c" class="bulleted-list"><li style="list-style-type:disc">Eavesdropping range limitations</li></ul><ul id="194bc05c-f968-807f-ab94-d71156d00614" class="bulleted-list"><li style="list-style-type:disc">Encryption performance metrics</li></ul><ul id="194bc05c-f968-80cc-8c35-d67d4f9f9db5" class="bulleted-list"><li style="list-style-type:disc">IDS effectiveness statistics</li></ul><p id="194bc05c-f968-80ba-a821-c428340b52cb" class=""><strong>VI. Cybersecurity Recommendations</strong></p><ul id="194bc05c-f968-80f8-98a6-f08f532b4b8d" class="bulleted-list"><li style="list-style-type:disc">Multi-factor authentication</li></ul><ul id="194bc05c-f968-803f-8013-f13683d2871e" class="bulleted-list"><li style="list-style-type:disc">Frequency hopping techniques</li></ul><ul id="194bc05c-f968-807a-be76-fbf0038ca4f7" class="bulleted-list"><li style="list-style-type:disc">Regular security audits</li></ul><ul id="194bc05c-f968-8014-894f-f4623ecd06a3" class="bulleted-list"><li style="list-style-type:disc">Firmware update protocols</li></ul><p id="194bc05c-f968-80b6-9477-ea20ab90474d" class=""><strong>VII. Conclusion</strong></p><ul id="194bc05c-f968-8078-914c-f47addfb9721" class="bulleted-list"><li style="list-style-type:disc">Critical findings</li></ul><ul id="194bc05c-f968-8056-9b40-c99c58ab9f88" class="bulleted-list"><li style="list-style-type:disc">Future research directions</li></ul><ul id="194bc05c-f968-80ce-b527-ea569f121271" class="bulleted-list"><li style="list-style-type:disc">IoT security best practices</li></ul><p id="194bc05c-f968-80f6-b445-c292b05c8f1a" class=""><strong>Appendix</strong></p><ul id="194bc05c-f968-80ba-8557-c8935967755e" class="bulleted-list"><li style="list-style-type:disc">Complete code listings</li></ul><ul id="194bc05c-f968-8009-995c-c0773c4953a5" class="bulleted-list"><li style="list-style-type:disc">Circuit diagrams</li></ul><ul id="194bc05c-f968-8063-a921-db407002fe01" class="bulleted-list"><li style="list-style-type:disc">Raw test data</li></ul><h3 id="194bc05c-f968-80d4-a0a6-e03bf73bd85a" class="">Implementation Steps:</h3><ol type="1" id="194bc05c-f968-80c5-a5b7-c525f713db17" class="numbered-list" start="1"><li>Set up RFID hardware with Raspberry Pi</li></ol><ol type="1" id="194bc05c-f968-80af-92ab-cec16c05047f" class="numbered-list" start="2"><li>Install required libraries:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8018-bd36-e911af9d358c" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">pip3 install mfrc522 pycryptodome</code></pre></li></ol><ol type="1" id="194bc05c-f968-80ca-abe8-d6b951021410" class="numbered-list" start="3"><li>Implement attack scripts to demonstrate vulnerabilities</li></ol><ol type="1" id="194bc05c-f968-807b-8609-c9cd4da9a1a5" class="numbered-list" start="4"><li>Deploy defense mechanisms with encryption and IDS</li></ol><ol type="1" id="194bc05c-f968-8093-8c0f-ebfc5f5598a2" class="numbered-list" start="5"><li>Conduct penetration testing</li></ol><ol type="1" id="194bc05c-f968-803f-9f27-d7c63a77ddf8" class="numbered-list" start="6"><li>Collect performance metrics</li></ol><ol type="1" id="194bc05c-f968-806b-9a56-cbc416e6b6f4" class="numbered-list" start="7"><li>Analyze results and compile report</li></ol><h3 id="194bc05c-f968-8021-b375-c32ac83286d7" class="">Cybersecurity Enhancements:</h3><ol type="1" id="194bc05c-f968-80d3-8a0d-e8457883493b" class="numbered-list" start="1"><li>Implement challenge-response authentication</li></ol><ol type="1" id="194bc05c-f968-80b7-9e76-fd44bcbcd54e" class="numbered-list" start="2"><li>Add HMAC verification for data integrity</li></ol><ol type="1" id="194bc05c-f968-8032-a053-e474a1f79656" class="numbered-list" start="3"><li>Introduce time-based one-time passwords (TOTP)</li></ol><ol type="1" id="194bc05c-f968-808b-85a4-c25b7811ba6c" class="numbered-list" start="4"><li>Develop secure key management system</li></ol><p id="194bc05c-f968-8027-8ece-e4c67d8a38e8" class="">This implementation demonstrates real-world RFID vulnerabilities and their corresponding defense strategies, providing practical examples for your cybersecurity thesis. The report should cover both technical implementation details and strategic security recommendations.</p></details></li></ul><ul id="194bc05c-f968-8071-a04b-fe4ce8655075" class="toggle"><li><details open=""><summary>Same Help but with Chatgpt</summary><p id="194bc05c-f968-80d4-b348-c61da86349c8" class="">This project will demonstrate RFID security vulnerabilities and defenses using a Raspberry Pi 4 and an <strong>RFID-RC522</strong> module. It includes attack scripts (cloning, eavesdropping) and defense mechanisms (encryption, intrusion detection).</p><hr id="194bc05c-f968-80aa-b265-fdac4187de81"/><h2 id="194bc05c-f968-803e-827b-c4365501485b" class=""><strong>Project Outline</strong></h2><h3 id="194bc05c-f968-8072-9a3b-c20f2fcd49b1" class=""><strong>1. Attacker Scripts</strong></h3><ul id="194bc05c-f968-801f-8a86-c2b9579c9758" class="bulleted-list"><li style="list-style-type:disc"><strong>Cloning (attacker_clone.py)</strong>: Reads RFID tag data and writes it to another tag.</li></ul><ul id="194bc05c-f968-80b7-bb84-c55e37bc38e1" class="bulleted-list"><li style="list-style-type:disc"><strong>Eavesdropping (attacker_eavesdrop.py)</strong>: Continuously reads RFID tags and logs detected data.</li></ul><ul id="194bc05c-f968-808f-8f57-d0153d0c95c6" class="bulleted-list"><li style="list-style-type:disc"><strong>Denial of Service (attacker_dos.py)</strong> (Optional): Overwrites RFID tags with random data.</li></ul><h3 id="194bc05c-f968-8079-a9fa-e86c3d319eaa" class=""><strong>2. Defender Scripts</strong></h3><ul id="194bc05c-f968-800b-ba7c-f51586df5589" class="bulleted-list"><li style="list-style-type:disc"><strong>Encryption (defender_encrypt.py)</strong>: Uses AES encryption to write encrypted data to RFID tags.</li></ul><ul id="194bc05c-f968-80fe-84f4-fcf9095c276e" class="bulleted-list"><li style="list-style-type:disc"><strong>Intrusion Detection System (defender_ids.py)</strong>: Monitors for excessive reads and blocks unauthorized access.</li></ul><h3 id="194bc05c-f968-8067-a949-cba968bacadf" class=""><strong>3. Report Outline</strong></h3><ul id="194bc05c-f968-80a4-a814-ea73d25a7042" class="bulleted-list"><li style="list-style-type:disc">Introduction to <strong>RFID Security and Cyber Threats</strong></li></ul><ul id="194bc05c-f968-804a-933d-ff0fb128b880" class="bulleted-list"><li style="list-style-type:disc">Explanation of <strong>Attack Techniques</strong> (Cloning, Eavesdropping, DoS)</li></ul><ul id="194bc05c-f968-8006-b775-e8723e586475" class="bulleted-list"><li style="list-style-type:disc">Implementation of <strong>Defense Mechanisms</strong> (AES Encryption, IDS)</li></ul><ul id="194bc05c-f968-809d-9d46-f6a89d3372b8" class="bulleted-list"><li style="list-style-type:disc"><strong>Code Breakdown and Execution Steps</strong></li></ul><ul id="194bc05c-f968-8033-aec5-eefd105a184f" class="bulleted-list"><li style="list-style-type:disc"><strong>Results, Testing, and Limitations</strong></li></ul><ul id="194bc05c-f968-801c-9fad-cfc0627d5051" class="bulleted-list"><li style="list-style-type:disc"><strong>Conclusion and Recommendations</strong></li></ul><hr id="194bc05c-f968-8088-a7f9-ff8acf1723ef"/><h1 id="194bc05c-f968-80da-be8b-db14a8de4902" class=""><strong>1️⃣ Setting Up the Environment</strong></h1><h3 id="194bc05c-f968-801d-8746-fe9aef0d954d" class=""><strong>Install Dependencies</strong></h3><p id="194bc05c-f968-803f-8b44-c524d2708952" class="">Ensure your Raspberry Pi has the necessary libraries:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-80c7-a0ec-f23230538bff" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">bash
+CopyEdit
+sudo apt update
+sudo apt install python3-pip
+pip3 install spidev RPi.GPIO mfrc522 cryptography
+
+</code></pre><hr id="194bc05c-f968-8066-a8b7-ddb8fd597532"/><h1 id="194bc05c-f968-80a5-9814-cdf1c2257a43" class=""><strong>2️⃣ Attacker Scripts</strong></h1><h3 id="194bc05c-f968-8001-bc71-e1ad6a58b737" class=""><strong>🔴 1. RFID Cloning (attacker_clone.py)</strong></h3><p id="194bc05c-f968-80a3-a472-f86905880b6b" class="">This script <strong>reads an RFID tag</strong> and writes its data to another tag, simulating <strong>cloning</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-805c-a518-dac84387dce1" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Place the original tag to read...&quot;)
+    id, text = reader.read()
+    print(f&quot;Read ID: {id}, Data: {text}&quot;)
+
+    print(&quot;Now place the target tag to clone...&quot;)
+    reader.write(text)
+    print(&quot;Tag cloned successfully!&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-8088-8b06-deca2dacd28b"/><h3 id="194bc05c-f968-808f-9555-d1e2f18b4acb" class=""><strong>🔴 2. Eavesdropping (attacker_eavesdrop.py)</strong></h3><p id="194bc05c-f968-8049-a03f-ee94ad61e883" class="">This script <strong>continuously scans for RFID tags</strong> and logs their data.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8012-a10d-dbb39f8330d6" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import time
+
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Eavesdropping... Press Ctrl+C to stop.&quot;)
+    while True:
+        id, text = reader.read()
+        print(f&quot;Detected Tag ID: {id}, Data: {text}&quot;)
+        with open(&quot;log.txt&quot;, &quot;a&quot;) as log:
+            log.write(f&quot;{time.ctime()} - ID: {id}, Data: {text}\n&quot;)
+        time.sleep(1)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-80e7-baab-e6918f2346a0"/><h3 id="194bc05c-f968-8015-b4a2-dd4d095bf724" class=""><strong>🔴 3. Denial of Service (attacker_dos.py)</strong></h3><p id="194bc05c-f968-80b0-8eb4-fdb9ac67b580" class="">This script <strong>overwrites RFID tags with random data</strong>, making them unusable.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8093-b8b9-d9f829b61235" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import random
+import string
+
+reader = SimpleMFRC522()
+
+def generate_random_string(length=16):
+    return &#x27;&#x27;.join(random.choices(string.ascii_letters + string.digits, k=length))
+
+try:
+    while True:
+        print(&quot;Place tag to overwrite...&quot;)
+        reader.write(generate_random_string())
+        print(&quot;Tag overwritten. Move to the next one.&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-80ba-8e0b-fdd7de21a60d"/><h1 id="194bc05c-f968-8021-883f-df9c70f41e64" class=""><strong>3️⃣ Defender Scripts</strong></h1><h3 id="194bc05c-f968-800c-9054-e96f991b54cf" class=""><strong>🛡️ 1. AES Encryption (defender_encrypt.py)</strong></h3><p id="194bc05c-f968-8063-a7b5-c1e536ee512c" class="">This script <strong>encrypts data before writing it to an RFID tag</strong> and <strong>decrypts it when reading</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-80bb-b35d-d1c7245b0fd8" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+from cryptography.fernet import Fernet
+
+# Generate or load encryption key
+key = Fernet.generate_key()
+cipher = Fernet(key)
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Enter data to write:&quot;)
+    data = input()
+    encrypted_data = cipher.encrypt(data.encode()).decode()
+
+    print(&quot;Place the tag to write encrypted data...&quot;)
+    reader.write(encrypted_data)
+    print(&quot;Encrypted data written!&quot;)
+
+    print(&quot;Now place the tag to read...&quot;)
+    id, encrypted_text = reader.read()
+    decrypted_text = cipher.decrypt(encrypted_text.encode()).decode()
+    print(f&quot;Decrypted Data: {decrypted_text}&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-8077-bbc3-de7714933aa5"/><h3 id="194bc05c-f968-80e0-a8a4-f5ac998e59d0" class=""><strong>🛡️ 2. Intrusion Detection System (defender_ids.py)</strong></h3><p id="194bc05c-f968-80ef-939e-fa2a57b22408" class="">This script <strong>detects rapid repeated reads</strong>, which may indicate an attack, and blocks access temporarily.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8053-a3fa-f3a1aa5a0e1b" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import time
+
+reader = SimpleMFRC522()
+read_attempts = []
+BLOCK_THRESHOLD = 5  # Maximum allowed reads within 10 seconds
+BLOCK_TIME = 10  # Time in seconds to block access
+
+def is_attack_detected():
+    now = time.time()
+    read_attempts.append(now)
+    read_attempts[:] = [t for t in read_attempts if now - t &lt; 10]
+    return len(read_attempts) &gt; BLOCK_THRESHOLD
+
+try:
+    print(&quot;IDS Active... Monitoring RFID activity.&quot;)
+    while True:
+        id, text = reader.read()
+        if is_attack_detected():
+            print(&quot;⚠️ Intrusion detected! Blocking further reads for 10 seconds.&quot;)
+            time.sleep(BLOCK_TIME)
+            read_attempts.clear()
+        else:
+            print(f&quot;Read ID: {id}, Data: {text}&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-80c7-8a2c-e57415acccad"/><h1 id="194bc05c-f968-8034-ad44-d14bcee10f26" class=""><strong>4️⃣ Testing and Results</strong></h1><h3 id="194bc05c-f968-8037-ab77-ce0eee9fa520" class=""><strong>Test Plan</strong></h3><ul id="194bc05c-f968-8074-a88c-ef11c59e1fd3" class="bulleted-list"><li style="list-style-type:disc"><strong>Clone a tag</strong>, then scan the original and cloned tag to confirm identical data.</li></ul><ul id="194bc05c-f968-80ed-ae2d-dec8a3366458" class="bulleted-list"><li style="list-style-type:disc"><strong>Run eavesdropping script</strong> while scanning different tags to check if logs capture them.</li></ul><ul id="194bc05c-f968-80d0-b580-fd2608035f41" class="bulleted-list"><li style="list-style-type:disc"><strong>Overwrite tags with DoS script</strong>, then try reading them to confirm data corruption.</li></ul><ul id="194bc05c-f968-8041-a16c-c7e405e09cb3" class="bulleted-list"><li style="list-style-type:disc"><strong>Write encrypted data to a tag</strong>, read it back, and check if decryption is correct.</li></ul><ul id="194bc05c-f968-8069-a0ef-dbddfb0c8929" class="bulleted-list"><li style="list-style-type:disc"><strong>Trigger IDS</strong> by scanning rapidly and verify if it blocks access.</li></ul><hr id="194bc05c-f968-801a-8c40-c1877aa7823d"/><h1 id="194bc05c-f968-80c3-abc5-c64d7593d03c" class=""><strong>5️⃣ Report Outline</strong></h1><h3 id="194bc05c-f968-8026-8cf6-c8e4acc373a2" class=""><strong>📄 1. Introduction</strong></h3><ul id="194bc05c-f968-8015-bc68-dc20bba7cd19" class="bulleted-list"><li style="list-style-type:disc">Overview of <strong>RFID security in IoT</strong>.</li></ul><ul id="194bc05c-f968-80f3-8547-d6fed01d012f" class="bulleted-list"><li style="list-style-type:disc">Common threats like <strong>cloning, eavesdropping, and denial of service</strong>.</li></ul><h3 id="194bc05c-f968-80e3-9358-db81fc41df76" class=""><strong>📄 2. Attack Techniques</strong></h3><ul id="194bc05c-f968-80f3-aa29-e30a9dc21d1a" class="bulleted-list"><li style="list-style-type:disc"><strong>Cloning:</strong> Replicating an RFID tag.</li></ul><ul id="194bc05c-f968-800a-9e6e-d8530bcd4e25" class="bulleted-list"><li style="list-style-type:disc"><strong>Eavesdropping:</strong> Capturing tag data.</li></ul><ul id="194bc05c-f968-80e2-9d45-dee2cfaeeeab" class="bulleted-list"><li style="list-style-type:disc"><strong>DoS:</strong> Corrupting RFID data.</li></ul><h3 id="194bc05c-f968-8073-9e05-cf319c686919" class=""><strong>📄 3. Defense Mechanisms</strong></h3><ul id="194bc05c-f968-800b-a999-dcba33c16ccd" class="bulleted-list"><li style="list-style-type:disc"><strong>AES Encryption:</strong> Securing RFID data.</li></ul><ul id="194bc05c-f968-80c2-94ce-d034a20eb5f8" class="bulleted-list"><li style="list-style-type:disc"><strong>Intrusion Detection System:</strong> Detecting excessive scans.</li></ul><h3 id="194bc05c-f968-80c4-ae05-e839ad87ff74" class=""><strong>📄 4. Implementation and Code Explanation</strong></h3><ul id="194bc05c-f968-8092-bbd1-e125760e88e0" class="bulleted-list"><li style="list-style-type:disc"><strong>Breakdown of scripts</strong> (attack and defense).</li></ul><ul id="194bc05c-f968-808d-bc9d-e6588bb26452" class="bulleted-list"><li style="list-style-type:disc"><strong>How encryption and IDS work</strong>.</li></ul><h3 id="194bc05c-f968-8078-b2e3-f2e5d0e1a7d1" class=""><strong>📄 5. Testing and Evaluation</strong></h3><ul id="194bc05c-f968-801d-baaf-ea1344497728" class="bulleted-list"><li style="list-style-type:disc"><strong>Cloning success</strong>: Verify duplicate tags.</li></ul><ul id="194bc05c-f968-8041-8dac-ea7707d28388" class="bulleted-list"><li style="list-style-type:disc"><strong>Eavesdropping logs</strong>: Check captured data.</li></ul><ul id="194bc05c-f968-8076-8532-ea34395a4e57" class="bulleted-list"><li style="list-style-type:disc"><strong>Encryption effectiveness</strong>: Confirm correct decryption.</li></ul><ul id="194bc05c-f968-80a5-901b-cb9ed993fffd" class="bulleted-list"><li style="list-style-type:disc"><strong>IDS detection</strong>: Ensure rapid scans trigger an alert.</li></ul><h3 id="194bc05c-f968-8000-8cd2-d86991159b9a" class=""><strong>📄 6. Conclusion and Future Work</strong></h3><ul id="194bc05c-f968-802a-9b06-d89329afad27" class="bulleted-list"><li style="list-style-type:disc">Discuss <strong>RFID security challenges</strong>.</li></ul><ul id="194bc05c-f968-8038-8d31-f1035dc28fdd" class="bulleted-list"><li style="list-style-type:disc">Recommend <strong>real-world improvements</strong> (HMAC authentication, hardware security modules).</li></ul><hr id="194bc05c-f968-80ae-9943-c76f87d12b1e"/><h2 id="194bc05c-f968-8069-8eaa-f876ddb17042" class=""><strong>Final Notes</strong></h2><p id="194bc05c-f968-808d-a32d-cda1ff1f65b7" class="">This project <strong>demonstrates RFID security vulnerabilities</strong> in IoT and proposes <strong>defense techniques</strong>. It provides a <strong>practical cybersecurity thesis</strong> with clear implementations of <strong>cloning, eavesdropping, encryption, and IDS</strong>.</p><p id="194bc05c-f968-8040-8fb9-cfb3320147f3" class="">Would you like me to assist in writing a detailed <strong>final report</strong> based on this project? 🚀</p><h3 id="194bc05c-f968-8042-9f1a-e6d502eddd11" class="">You said:</h3><p id="194bc05c-f968-8081-8837-e06d44d31b41" class="">need to help the user create a project related to RFID and cybersecurity in Kathmandu Valley. They mentioned their thesis title, so the focus is on both attack and defense aspects using RFID-RC522 and Raspberry Pi. Let me check the search results provided to see what&#x27;s relevant.<br/><br/>First, the user wants the project to be applied in Kathmandu Valley. From the search results, there are articles about RFID implementation at entry points in Kathmandu. Webpages 1, 3, and 7 mention RFID posts being set up for vehicle tracking. This is a real-world application in Nepal, so I should include that context. The government is using RFID for vehicle number plates to track movements and assist police, which ties into the cybersecurity aspect as well.<br/><br/>Next, the step-by-step guide. The user has existing code for reading and writing RFID tags, but the thesis requires a more structured approach. Looking at the search results, webpages 6 and 8 provide RFID implementation roadmaps. These include steps like understanding RFID basics, assessing needs, planning, pilot testing, etc. I can structure the implementation steps based on these, adapting them to the specific tools (Raspberry Pi, RFID-RC522) and the cybersecurity angle.<br/><br/>For the literature review, I need to connect the project to existing studies and real-world applications. Webpages 1, 3, and 7 discuss Nepal&#x27;s RFID initiatives. Webpages 4 and 5 talk about cybersecurity challenges in Nepal, including the need for education, infrastructure, and policies. The literature review should reference these sources to show how the project addresses current issues in Nepal.<br/><br/>Also, the cybersecurity aspects mentioned in the user&#x27;s thesis title need to be covered. The previous answer provided attack and defense scripts, but integrating the search results about Nepal&#x27;s cybersecurity policies (webpages 4 and 5) will strengthen the literature review. Mentioning the National Cybersecurity Policy and initiatives by npCert would be relevant.<br/><br/>I need to ensure that each part of the answer cites the appropriate webpages. For example, when discussing RFID implementation in Kathmandu, cite webpages 1 and 3. When talking about cybersecurity challenges, cite 4 and 5. The step-by-step guide can reference the roadmaps from 6 and 8.<br/><br/>Also, since the user&#x27;s project is a small-scale model, I should frame it as a prototype that mirrors the larger government project. Highlighting how the project&#x27;s attack and defense mechanisms relate to real-world applications in Kathmandu will make it relevant. The literature review can compare the project&#x27;s approach with existing implementations and policies in Nepal.<br/><br/>Finally, make sure the answer is structured clearly: context of RFID in Kathmandu, step-by-step implementation, literature review, and conclusion. Use citations appropriately throughout, not just at the end. Check that all parts are covered and that the search results are used effectively to support the answer.<br/><br/>Also with Full code and guidelines to setup with my devices:<br/></p><h3 id="194bc05c-f968-805e-b908-d956202bf1a4" class="">ChatGPT said:</h3><p id="194bc05c-f968-80f1-a9e9-e00217f47ac6" class="">Integrating RFID technology with cybersecurity measures is crucial, especially in regions like the Kathmandu Valley, where RFID applications are expanding. The Department of Transport Management has initiated the installation of RFID gates at major entry points to Kathmandu Valley to monitor vehicle movement.</p><p id="194bc05c-f968-8002-8e11-c98dea8e9868" class=""><a href="https://thehimalayantimes.com/kathmandu/radio-frequency-identification-device-gates-installed-kathmandu-valleys-entry-points?utm_source=chatgpt.com">thehimalayantimes.com</a></p><p id="194bc05c-f968-8059-b5a9-f93ecaee434c" class=""><strong>Project Overview:</strong></p><p id="194bc05c-f968-805c-bdfa-f60de6e50e31" class="">This project aims to explore both the vulnerabilities and defenses associated with RFID systems using the RFID-RC522 module and a Raspberry Pi. The focus will be on understanding potential attack vectors and implementing corresponding defense mechanisms.</p><p id="194bc05c-f968-809b-b03f-fff67dd742c6" class=""><strong>Implementation Steps:</strong></p><ol type="1" id="194bc05c-f968-80ba-8b59-c9ab9efcada8" class="numbered-list" start="1"><li><strong>Setup and Configuration:</strong><ul id="194bc05c-f968-807e-ad6b-cf9e02356cba" class="bulleted-list"><li style="list-style-type:disc"><strong>Hardware Connections:</strong> Connect the RFID-RC522 module to the Raspberry Pi using the SPI interface. Ensure proper wiring to facilitate communication between the devices.<p id="194bc05c-f968-8027-9f66-d1e871643d18" class=""><a href="https://pimylifeup.com/raspberry-pi-rfid-rc522/?utm_source=chatgpt.com">pimylifeup.com</a></p></li></ul><ul id="194bc05c-f968-8022-99ba-d8bb89270be2" class="bulleted-list"><li style="list-style-type:disc"><strong>Software Installation:</strong> Install necessary libraries such as <code>spidev</code> and <code>mfrc522</code> to enable interaction with the RFID module.</li></ul></li></ol><ol type="1" id="194bc05c-f968-8020-86b6-da784b8ab7f0" class="numbered-list" start="2"><li><strong>Attack Simulations:</strong><ul id="194bc05c-f968-807f-b633-e40dbe2d5204" class="bulleted-list"><li style="list-style-type:disc"><strong>Cloning:</strong> Develop a script that reads data from an RFID tag and writes the same data to another tag, effectively cloning the original.</li></ul><ul id="194bc05c-f968-8005-aa96-d4f5f302517e" class="bulleted-list"><li style="list-style-type:disc"><strong>Eavesdropping:</strong> Create a script that continuously scans for RFID tags within range and logs their data, simulating an eavesdropping scenario.</li></ul></li></ol><ol type="1" id="194bc05c-f968-80fa-8eff-e3dd1e23f831" class="numbered-list" start="3"><li><strong>Defense Mechanisms:</strong><ul id="194bc05c-f968-8069-913b-d9e019bcd5d1" class="bulleted-list"><li style="list-style-type:disc"><strong>Encryption:</strong> Implement AES encryption to secure data stored on RFID tags. This ensures that even if data is intercepted, it remains unintelligible without the decryption key.</li></ul><ul id="194bc05c-f968-8030-a504-d69d1204172d" class="bulleted-list"><li style="list-style-type:disc"><strong>Intrusion Detection System (IDS):</strong> Set up an IDS that monitors RFID read attempts and triggers alerts or blocks access upon detecting suspicious activity, such as rapid consecutive reads.</li></ul></li></ol><p id="194bc05c-f968-801c-8ff8-e38a9e47b5d8" class=""><strong>Literature Review:</strong></p><p id="194bc05c-f968-800b-b5aa-f79d310e2deb" class="">In Kathmandu, RFID technology is being utilized for vehicle tracking and management. For instance, RFID windshield tags are employed to monitor vehicle entry and exit, enhancing security and operational efficiency.</p><p id="194bc05c-f968-8047-8135-c805d2ac64ab" class=""><a href="https://www.osrfidglobal.com/car-manufacturer/car-manufacturer/?utm_source=chatgpt.com">osrfidglobal.com</a></p><p id="194bc05c-f968-8048-98c5-d5a7404251a1" class="">However, the increasing adoption of RFID systems also brings forth cybersecurity challenges. Potential threats include unauthorized cloning of RFID tags, eavesdropping on RFID communications, and denial-of-service attacks. Addressing these vulnerabilities is essential to maintain the integrity and security of RFID-based applications.</p><p id="194bc05c-f968-80f3-9999-fd3ba1ace334" class=""><strong>Conclusion:</strong></p><p id="194bc05c-f968-8006-8c2c-c4861e036210" class="">By understanding and implementing both attack and defense strategies, this project provides a comprehensive overview of RFID security. It highlights the importance of securing RFID systems, especially in regions like Kathmandu Valley, where such technologies are integral to infrastructure and services.</p><p id="194bc05c-f968-80a9-bead-dcd5361151ca" class=""><strong>Next Steps:</strong></p><p id="194bc05c-f968-805b-a798-cba93fada2f2" class="">Would you like to proceed with detailed coding implementations for the mentioned attack and defense mechanisms, or is there a specific area you&#x27;d like to focus on?</p><p id="194bc05c-f968-807d-9853-c6a107661114" class="">Sources</p><figure id="194bc05c-f968-8041-8e02-f43f9c825204" class="image"><a href="https://www.google.com/s2/favicons?domain=https://www.osrfidglobal.com&amp;sz=32"><img style="width:32px" src="https://www.google.com/s2/favicons?domain=https://www.osrfidglobal.com&amp;sz=32"/></a></figure><figure id="194bc05c-f968-80c8-8c55-f46023124dae" class="image"><a href="https://www.google.com/s2/favicons?domain=https://pimylifeup.com&amp;sz=32"><img style="width:32px" src="https://www.google.com/s2/favicons?domain=https://pimylifeup.com&amp;sz=32"/></a></figure><figure id="194bc05c-f968-804a-9353-c3903a01d259" class="image"><a href="https://www.google.com/s2/favicons?domain=https://thehimalayantimes.com&amp;sz=32"><img style="width:32px" src="https://www.google.com/s2/favicons?domain=https://thehimalayantimes.com&amp;sz=32"/></a></figure><h3 id="194bc05c-f968-80e4-a6ca-e46c98a2cab6" class="">You said:</h3><p id="194bc05c-f968-80ca-925a-f7a5dd8ebcb2" class="">do it better:</p><h3 id="194bc05c-f968-805a-b8ce-efc56082a932" class="">ChatGPT said:</h3><h1 id="194bc05c-f968-8005-92a9-dab8c1b4e387" class=""><strong>RFID &amp; Cybersecurity in Kathmandu Valley: A Practical Implementation with Raspberry Pi &amp; RFID-RC522</strong></h1><h2 id="194bc05c-f968-8055-98d8-feac7c1caf60" class=""><strong>1️⃣ Introduction: RFID &amp; Cybersecurity in Kathmandu</strong></h2><p id="194bc05c-f968-807c-b161-c9e1ed72fecd" class="">RFID technology is increasingly used in <strong>Nepal</strong>, especially in <strong>Kathmandu Valley</strong>, for vehicle tracking and access control. The <strong>Department of Transport Management</strong> has installed <strong>RFID gates</strong> at major entry points to monitor vehicle movement, helping with traffic management and security. (The Himalayan Times)</p><h3 id="194bc05c-f968-803d-9a6c-c71c73055a8f" class=""><strong>Cybersecurity Concerns</strong></h3><p id="194bc05c-f968-803a-a0fe-e33b1a27bfe2" class="">Despite its benefits, <strong>RFID systems are vulnerable</strong> to security threats, such as:</p><p id="194bc05c-f968-8056-bed0-fabad2aa1eea" class="">✅ <strong>Cloning:</strong> Copying RFID data to create duplicate tags.</p><p id="194bc05c-f968-8084-a481-e31d4bef5fd7" class="">✅ <strong>Eavesdropping:</strong> Intercepting RFID communication to steal data.</p><p id="194bc05c-f968-80bf-b6b1-ce752dcfe397" class="">✅ <strong>Denial of Service (DoS):</strong> Flooding the system with invalid data.</p><p id="194bc05c-f968-80bd-8a3b-d7fd1e7e2b48" class="">This project <strong>simulates RFID attacks</strong> (cloning &amp; eavesdropping) and <strong>implements security defenses</strong> (AES encryption &amp; intrusion detection) using a <strong>Raspberry Pi 4 and RFID-RC522</strong> module.</p><hr id="194bc05c-f968-80aa-8b2a-ced93016e1de"/><h2 id="194bc05c-f968-8086-a203-f2d4ac8c2ac8" class=""><strong>2️⃣ Project Setup: Hardware &amp; Software</strong></h2><h3 id="194bc05c-f968-8087-aec5-ccd69b8bf275" class=""><strong>🔧 Hardware Requirements</strong></h3><ul id="194bc05c-f968-8039-ba86-fc678cadac58" class="bulleted-list"><li style="list-style-type:disc"><strong>Raspberry Pi 4</strong> (or any model with SPI support)</li></ul><ul id="194bc05c-f968-80b2-ad9d-d0120e4d89ba" class="bulleted-list"><li style="list-style-type:disc"><strong>RFID-RC522 Module</strong></li></ul><ul id="194bc05c-f968-804a-b435-cbb7bd907635" class="bulleted-list"><li style="list-style-type:disc"><strong>RFID Tags or Cards</strong></li></ul><ul id="194bc05c-f968-80ef-ba98-e2508459143d" class="bulleted-list"><li style="list-style-type:disc"><strong>Jumper Wires</strong></li></ul><h3 id="194bc05c-f968-80c4-b68c-ee2c33f4b89f" class=""><strong>🖥️ Wiring: Connect RFID-RC522 to Raspberry Pi</strong></h3><table id="194bc05c-f968-8037-99c8-e86021baca5f" class="simple-table"><tbody><tr id="194bc05c-f968-806d-b4e5-f1d2f505fabb"><td id="FPF{" class=""><strong>RFID-RC522 Pin</strong></td><td id="h`;h" class=""><strong>Raspberry Pi GPIO Pin</strong></td></tr><tr id="194bc05c-f968-802a-be5d-d58cb7c98e5e"><td id="FPF{" class="">SDA (SS)</td><td id="h`;h" class="">GPIO 8 (CE0)</td></tr><tr id="194bc05c-f968-80b8-b00e-c2292850c837"><td id="FPF{" class="">SCK</td><td id="h`;h" class="">GPIO 11 (SCLK)</td></tr><tr id="194bc05c-f968-808a-9080-d22afaab98ba"><td id="FPF{" class="">MOSI</td><td id="h`;h" class="">GPIO 10 (MOSI)</td></tr><tr id="194bc05c-f968-809c-8b56-eec26f6d6da6"><td id="FPF{" class="">MISO</td><td id="h`;h" class="">GPIO 9 (MISO)</td></tr><tr id="194bc05c-f968-80c2-9e9b-e36203c9ccfb"><td id="FPF{" class="">GND</td><td id="h`;h" class="">GND</td></tr><tr id="194bc05c-f968-8079-b3c3-ee862c9d45a2"><td id="FPF{" class="">RST</td><td id="h`;h" class="">GPIO 25</td></tr><tr id="194bc05c-f968-8031-91a6-fff231cdf85b"><td id="FPF{" class="">3.3V</td><td id="h`;h" class="">3.3V</td></tr></tbody></table><h3 id="194bc05c-f968-80a1-aa93-de399c57d1ff" class=""><strong>🛠️ Install Dependencies</strong></h3><p id="194bc05c-f968-80f8-a391-e8c77144b05a" class="">Run the following commands to install required libraries:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-80c5-acc5-daefc897cd0c" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">bash
+CopyEdit
+sudo apt update
+sudo apt install python3-pip
+pip3 install spidev RPi.GPIO mfrc522 cryptography
+
+</code></pre><hr id="194bc05c-f968-8028-8866-e964e1e54bda"/><h2 id="194bc05c-f968-8040-a243-e5984eeea849" class=""><strong>3️⃣ Attack Simulations</strong></h2><h3 id="194bc05c-f968-80b8-a6ab-c988eb400065" class=""><strong>🛑 1. RFID Cloning (attacker_clone.py)</strong></h3><p id="194bc05c-f968-8025-a3e2-e0ac27f6ee64" class="">Reads an RFID tag and writes the same data to another tag, <strong>simulating cloning</strong>.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8051-bfcc-d65b428f2a1b" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Place the original tag to read...&quot;)
+    id, text = reader.read()
+    print(f&quot;Read ID: {id}, Data: {text}&quot;)
+
+    print(&quot;Now place the target tag to clone...&quot;)
+    reader.write(text)
+    print(&quot;Tag cloned successfully!&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-8038-9cf4-d1e3c0d57d99"/><h3 id="194bc05c-f968-8093-b163-c90d382cefb7" class=""><strong>🛑 2. Eavesdropping (attacker_eavesdrop.py)</strong></h3><p id="194bc05c-f968-8009-8e51-d886ec6438d1" class="">Continuously scans for RFID tags and logs detected data.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-806d-91f2-cef2b546d475" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import time
+
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Eavesdropping... Press Ctrl+C to stop.&quot;)
+    while True:
+        id, text = reader.read()
+        print(f&quot;Detected Tag ID: {id}, Data: {text}&quot;)
+        with open(&quot;log.txt&quot;, &quot;a&quot;) as log:
+            log.write(f&quot;{time.ctime()} - ID: {id}, Data: {text}\n&quot;)
+        time.sleep(1)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-80d8-88d7-e47ee8e4df62"/><h2 id="194bc05c-f968-80e2-bc15-f80e0bce5f7a" class=""><strong>4️⃣ Defense Mechanisms</strong></h2><h3 id="194bc05c-f968-8016-8538-cee7e2a34507" class=""><strong>🛡️ 1. AES Encryption (defender_encrypt.py)</strong></h3><p id="194bc05c-f968-803b-aa49-fe293ae94b9a" class="">Encrypts data before writing it to an RFID tag and decrypts it upon reading.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-800f-b916-f64705629e69" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+from cryptography.fernet import Fernet
+
+# Generate or load encryption key
+key = Fernet.generate_key()
+cipher = Fernet(key)
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Enter data to write:&quot;)
+    data = input()
+    encrypted_data = cipher.encrypt(data.encode()).decode()
+
+    print(&quot;Place the tag to write encrypted data...&quot;)
+    reader.write(encrypted_data)
+    print(&quot;Encrypted data written!&quot;)
+
+    print(&quot;Now place the tag to read...&quot;)
+    id, encrypted_text = reader.read()
+    decrypted_text = cipher.decrypt(encrypted_text.encode()).decode()
+    print(f&quot;Decrypted Data: {decrypted_text}&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-80c4-9ec6-fb0338625536"/><h3 id="194bc05c-f968-804c-bbe3-d50e5b9058b2" class=""><strong>🛡️ 2. Intrusion Detection System (defender_ids.py)</strong></h3><p id="194bc05c-f968-806d-bf35-dc868a35ec37" class="">Detects rapid repeated reads and blocks access if suspicious activity is detected.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8061-9c70-cb490b234b16" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import time
+
+reader = SimpleMFRC522()
+read_attempts = []
+BLOCK_THRESHOLD = 5  # Max allowed reads in 10 seconds
+BLOCK_TIME = 10  # Block time in seconds
+
+def is_attack_detected():
+    now = time.time()
+    read_attempts.append(now)
+    read_attempts[:] = [t for t in read_attempts if now - t &lt; 10]
+    return len(read_attempts) &gt; BLOCK_THRESHOLD
+
+try:
+    print(&quot;IDS Active... Monitoring RFID activity.&quot;)
+    while True:
+        id, text = reader.read()
+        if is_attack_detected():
+            print(&quot;⚠️ Intrusion detected! Blocking further reads for 10 seconds.&quot;)
+            time.sleep(BLOCK_TIME)
+            read_attempts.clear()
+        else:
+            print(f&quot;Read ID: {id}, Data: {text}&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><hr id="194bc05c-f968-801d-870c-ec285d34af58"/><h2 id="194bc05c-f968-8043-a94f-d0a582d98102" class=""><strong>5️⃣ Testing &amp; Results</strong></h2><h3 id="194bc05c-f968-80e5-9055-ca3cfb3211bb" class=""><strong>Test Plan</strong></h3><table id="194bc05c-f968-8087-8109-c7b9323e6ada" class="simple-table"><tbody><tr id="194bc05c-f968-80a0-8b6e-fa7145ae5e11"><td id="eBOd" class=""><strong>Scenario</strong></td><td id="pYO@" class=""><strong>Expected Outcome</strong></td></tr><tr id="194bc05c-f968-8000-94cc-cd843bdf39eb"><td id="eBOd" class="">Clone a tag</td><td id="pYO@" class="">Duplicate tag functions like original</td></tr><tr id="194bc05c-f968-8066-bf92-d120d71af6fd"><td id="eBOd" class="">Eavesdropping script runs</td><td id="pYO@" class="">Logs detected RFID tag data</td></tr><tr id="194bc05c-f968-80d1-88fb-c836d112caf4"><td id="eBOd" class="">Encrypt &amp; write to a tag</td><td id="pYO@" class="">Data is unreadable without decryption</td></tr><tr id="194bc05c-f968-80ac-9714-c3b608a5d565"><td id="eBOd" class="">Rapid scans trigger IDS</td><td id="pYO@" class="">Access is blocked temporarily</td></tr></tbody></table><hr id="194bc05c-f968-80ae-b15b-e6a90d447b4a"/><h2 id="194bc05c-f968-8055-bd88-f442e07b45ae" class=""><strong>6️⃣ Literature Review &amp; Relevance to Kathmandu Valley</strong></h2><h3 id="194bc05c-f968-8084-816a-c4c554f41fa9" class=""><strong>📌 Real-World Applications in Nepal</strong></h3><ul id="194bc05c-f968-8070-a3db-e926f5c5265c" class="bulleted-list"><li style="list-style-type:disc"><strong>RFID for Vehicle Tracking:</strong> Kathmandu has implemented <strong>RFID gates</strong> for vehicle monitoring. (The Himalayan Times)</li></ul><ul id="194bc05c-f968-8007-b553-e684287cc03c" class="bulleted-list"><li style="list-style-type:disc"><strong>RFID in Transportation:</strong> Used for <strong>electronic toll collection</strong> and traffic management.</li></ul><ul id="194bc05c-f968-80a7-9735-ff3f8fed2ba5" class="bulleted-list"><li style="list-style-type:disc"><strong>Cybersecurity Concerns:</strong> Nepal faces increasing <strong>cyber threats</strong>, making <strong>RFID security a key issue</strong>. (<a href="https://www.npcert.org.np/">npCert - Nepal’s Cyber Security Policy</a>)</li></ul><h3 id="194bc05c-f968-80ad-adc5-ca700b0cb554" class=""><strong>📌 How This Project Contributes</strong></h3><p id="194bc05c-f968-8039-9080-c603d110c1b1" class="">✅ <strong>Mirrors real-world implementations in Kathmandu</strong> (RFID for vehicle tracking).</p><p id="194bc05c-f968-80e3-ab3f-ec95982f5431" class="">✅ <strong>Demonstrates vulnerabilities &amp; solutions</strong>, increasing awareness of <strong>cyber risks in Nepal</strong>.</p><p id="194bc05c-f968-8048-837f-ce2cc36dd5eb" class="">✅ <strong>Can be expanded</strong> for <strong>access control &amp; secure vehicle tracking</strong>.</p><hr id="194bc05c-f968-8021-b6ec-c0c1e48e9979"/><h2 id="194bc05c-f968-80cf-9261-dfe2dc5c4259" class=""><strong>7️⃣ Conclusion &amp; Future Work</strong></h2><h3 id="194bc05c-f968-8029-a3fe-d8be6bc9aa33" class=""><strong>📌 Summary</strong></h3><ul id="194bc05c-f968-80af-a2c3-d4dc86c0bee2" class="bulleted-list"><li style="list-style-type:disc">Simulated <strong>RFID attacks</strong> (Cloning, Eavesdropping).</li></ul><ul id="194bc05c-f968-8001-b69c-eaf06dea5bb7" class="bulleted-list"><li style="list-style-type:disc">Implemented <strong>security defenses</strong> (AES Encryption, Intrusion Detection).</li></ul><ul id="194bc05c-f968-80ed-abe5-e2a559f19a2b" class="bulleted-list"><li style="list-style-type:disc">Demonstrated <strong>real-world relevance in Kathmandu Valley</strong>.</li></ul><h3 id="194bc05c-f968-80c8-ac03-f2d966157b5c" class=""><strong>📌 Future Work</strong></h3><p id="194bc05c-f968-8021-b6ac-fd0b723344ae" class="">🔹 Implement <strong>two-factor authentication</strong> for RFID tags.</p><p id="194bc05c-f968-8032-a210-ea536ef92252" class="">🔹 <strong>Blockchain for RFID security</strong> in <strong>vehicle tracking systems</strong>.</p><p id="194bc05c-f968-8075-be43-f1e4c75862ac" class="">🔹 <strong>Machine Learning-based anomaly detection</strong> for RFID security.</p><hr id="194bc05c-f968-80ce-b0a0-c6cc7ce63cf3"/><h2 id="194bc05c-f968-80f9-9f5e-c7c532d327aa" class=""><strong>Final Notes</strong></h2><p id="194bc05c-f968-800e-abd9-c00ee3242674" class="">🚀 <strong>This project is a working prototype for RFID cybersecurity in Kathmandu Valley.</strong> It demonstrates <strong>both attacks and defenses</strong>, contributing to <strong>secure RFID deployments in Nepal</strong>.</p><p id="194bc05c-f968-803f-8ce1-d27ab5ce9f4d" class="">Would you like assistance in <strong>writing the final report</strong>? 📄</p><h3 id="194bc05c-f968-80d4-ac4b-ee42425405c7" class="">You said:</h3><p id="194bc05c-f968-801d-94ec-faf5cbc18f5e" class="">make a plan for attack Simulation and Defence Mechanisms in kathmandu Valley short and in humanized simple word to demonstrate it for my Thesis viva presentation:</p><h3 id="194bc05c-f968-8080-aad2-ce99d169adca" class="">ChatGPT said:</h3><h1 id="194bc05c-f968-80b1-b3b5-f7c6df2e2db8" class=""><strong>📌 Plan for Attack Simulation &amp; Defense in Kathmandu Valley (Viva Presentation)</strong></h1><h3 id="194bc05c-f968-80a8-b50c-cc6383a28182" class=""><strong>🛑 Attack Simulations (How RFID Can Be Hacked)</strong></h3><p id="194bc05c-f968-8055-a685-f4110890bd16" class="">🔴 <strong>1. Cloning Attack (Copy-Paste Fraud)</strong></p><p id="194bc05c-f968-80e4-96cf-d8ad78ef7b1f" class="">📌 What Happens?</p><ul id="194bc05c-f968-802b-86f7-d6d409a2f50d" class="bulleted-list"><li style="list-style-type:disc">An attacker <strong>scans a valid RFID card</strong>, saves its data, and <strong>writes it to another blank card</strong>.</li></ul><ul id="194bc05c-f968-80f5-92e2-e24931106901" class="bulleted-list"><li style="list-style-type:disc">This allows unauthorized people to <strong>enter restricted areas or use services for free</strong> (e.g., toll booths, parking systems).</li></ul><p id="194bc05c-f968-80d6-8f8c-fe118fd17ca5" class="">📌 <strong>Demo:</strong></p><ul id="194bc05c-f968-80f9-b6c1-d320b0411f4c" class="bulleted-list"><li style="list-style-type:disc"><strong>Read a tag</strong>, display its data, and <strong>copy it to another tag</strong>.</li></ul><ul id="194bc05c-f968-80d0-89d9-fd22502e38d0" class="bulleted-list"><li style="list-style-type:disc"><strong>Scan both tags</strong> to prove they are identical.</li></ul><p id="194bc05c-f968-80e1-b1c8-e36a112372e3" class="">🔴 <strong>2. Eavesdropping Attack (Spying on RFID Data)</strong></p><p id="194bc05c-f968-806a-a79b-d9c669c9fa90" class="">📌 What Happens?</p><ul id="194bc05c-f968-8047-ae31-ef19574df2c7" class="bulleted-list"><li style="list-style-type:disc">A hidden device <strong>listens to RFID scans</strong> and <strong>logs all detected tag data</strong>.</li></ul><ul id="194bc05c-f968-8024-9c78-c3186d4122eb" class="bulleted-list"><li style="list-style-type:disc">This data can be used for <strong>unauthorized access or identity theft</strong>.</li></ul><p id="194bc05c-f968-8072-bc2c-d8a9a16c92f1" class="">📌 <strong>Demo:</strong></p><ul id="194bc05c-f968-805a-b1b5-d3b3f7b01e1d" class="bulleted-list"><li style="list-style-type:disc">Run a script that <strong>logs any RFID card scanned nearby</strong>.</li></ul><ul id="194bc05c-f968-8060-a515-c39e860ef827" class="bulleted-list"><li style="list-style-type:disc">Show how the attacker <strong>collects secret RFID data without touching the card</strong>.</li></ul><hr id="194bc05c-f968-80dc-8a13-cb100af0430f"/><h3 id="194bc05c-f968-8044-ac57-f8e496f40e43" class=""><strong>🛡️ Defense Mechanisms (How We Can Protect RFID Systems)</strong></h3><p id="194bc05c-f968-801e-9dbb-c3f64b801f51" class="">✅ <strong>1. AES Encryption (Locking the Data)</strong></p><p id="194bc05c-f968-80b6-a900-fd78ca515672" class="">📌 How It Works?</p><ul id="194bc05c-f968-8031-9e9b-d7151c34347c" class="bulleted-list"><li style="list-style-type:disc">Instead of storing <strong>plain text</strong> on an RFID card, we store <strong>encrypted data</strong>.</li></ul><ul id="194bc05c-f968-80b2-9fb2-cbd16be9ed0d" class="bulleted-list"><li style="list-style-type:disc">Even if an attacker <strong>clones or eavesdrops</strong>, they get <strong>useless encrypted data</strong>.</li></ul><p id="194bc05c-f968-80ec-a840-dee944bd18b1" class="">📌 <strong>Demo:</strong></p><ul id="194bc05c-f968-80c8-8ae1-ec51dd4017f2" class="bulleted-list"><li style="list-style-type:disc"><strong>Write encrypted data</strong> to an RFID tag.</li></ul><ul id="194bc05c-f968-808d-9975-ea2b3261ab2b" class="bulleted-list"><li style="list-style-type:disc"><strong>Read the tag</strong> → Show how it’s encrypted (unreadable).</li></ul><ul id="194bc05c-f968-806d-9497-c2f324a07baf" class="bulleted-list"><li style="list-style-type:disc"><strong>Decrypt it</strong> using a secret key → Show the original message.</li></ul><p id="194bc05c-f968-80ee-b008-d9994fc96b7b" class="">✅ <strong>2. Intrusion Detection System (Catching Suspicious Activity)</strong></p><p id="194bc05c-f968-80d8-8703-f09f67848d09" class="">📌 How It Works?</p><ul id="194bc05c-f968-808f-aef9-d473723286f8" class="bulleted-list"><li style="list-style-type:disc">The system <strong>tracks RFID scans</strong> and detects <strong>unusual behavior</strong> (e.g., <strong>multiple scans in a short time</strong>).</li></ul><ul id="194bc05c-f968-80a0-bbec-ec995771a838" class="bulleted-list"><li style="list-style-type:disc">If an attack is detected, it <strong>blocks access</strong> temporarily.</li></ul><p id="194bc05c-f968-8034-87d2-f5eda8428d73" class="">📌 <strong>Demo:</strong></p><ul id="194bc05c-f968-80ef-b9c1-c60f1d03372f" class="bulleted-list"><li style="list-style-type:disc">Scan an RFID tag <strong>5 times quickly</strong> → Show that <strong>access is blocked</strong> after repeated scans.</li></ul><ul id="194bc05c-f968-80fd-8577-c8b5f6737563" class="bulleted-list"><li style="list-style-type:disc">Wait <strong>10 seconds</strong> → Show that access is <strong>restored</strong>.</li></ul><hr id="194bc05c-f968-804d-bae0-f7b49a6f252c"/><h3 id="194bc05c-f968-8038-b68d-e3255d083fe7" class=""><strong>🎯 Why This Matters for Kathmandu Valley?</strong></h3><p id="194bc05c-f968-8030-9c75-c231643c711b" class="">✔ <strong>Real-World Example:</strong> Kathmandu has <strong>RFID-based vehicle tracking</strong> at entry points. A hacker could <strong>clone a vehicle RFID tag</strong> to bypass tolls.</p><p id="194bc05c-f968-8052-8b32-c70ff94e2848" class="">✔ <strong>Cybersecurity Awareness:</strong> Protecting <strong>RFID systems in Nepal</strong> is <strong>important for security</strong> (e.g., secure parking, electronic payments).</p><p id="194bc05c-f968-80c8-8fef-ce2f27c0e3c6" class="">✔ <strong>Smart Future:</strong> This project helps in building <strong>safer RFID systems</strong> for <strong>transport, banking, and access control</strong> in Nepal.</p><hr id="194bc05c-f968-8003-a04c-ebfd01e834bf"/><p id="194bc05c-f968-8049-a11b-c182a64af40c" class="">🚀 <strong>Conclusion:</strong></p><p id="194bc05c-f968-80ae-aaa6-fddd0f049f77" class="">This demonstration shows <strong>how RFID can be hacked &amp; how we can protect it</strong> using <strong>encryption &amp; intrusion detection</strong>. Our goal is to <strong>secure RFID systems in Kathmandu and beyond!</strong> 🏙️🔐</p><h3 id="194bc05c-f968-8096-9aa3-d44a328a15d9" class="">You said:</h3><p id="194bc05c-f968-807c-815d-deff3bee82d1" class="">Step by step instructions to demonstrate it now with my devices:</p><h3 id="194bc05c-f968-8090-b5a7-c71e51752325" class="">ChatGPT said:</h3><h1 id="194bc05c-f968-80be-addd-fb4f3965d10a" class=""><strong>📌 Step-by-Step Instructions to Demonstrate RFID Security with Raspberry Pi &amp; RC522</strong></h1><p id="194bc05c-f968-807f-80c0-e93ef8b17b5d" class="">This guide will help you <strong>set up and demonstrate RFID attacks (Cloning &amp; Eavesdropping) and defenses (Encryption &amp; Intrusion Detection) on your Raspberry Pi with an RFID-RC522 module.</strong></p><hr id="194bc05c-f968-8086-b4b3-d646bd4658fb"/><h2 id="194bc05c-f968-80f7-bca9-f38daca89e82" class=""><strong>1️⃣ Setup Your Devices</strong></h2><h3 id="194bc05c-f968-801e-a66a-c96edb916066" class=""><strong>🛠️ Hardware Requirements</strong></h3><ul id="194bc05c-f968-8062-82cf-fef819f354f8" class="bulleted-list"><li style="list-style-type:disc"><strong>Raspberry Pi 4</strong> (or any model with SPI support)</li></ul><ul id="194bc05c-f968-8071-991b-d60a6eec9082" class="bulleted-list"><li style="list-style-type:disc"><strong>RFID-RC522 Module</strong></li></ul><ul id="194bc05c-f968-80a5-b029-d8001c4c0466" class="bulleted-list"><li style="list-style-type:disc"><strong>RFID Tags or Cards</strong></li></ul><ul id="194bc05c-f968-8012-a717-ef0e02378730" class="bulleted-list"><li style="list-style-type:disc"><strong>Jumper Wires</strong></li></ul><ul id="194bc05c-f968-80fc-b756-ca12ebcee44d" class="bulleted-list"><li style="list-style-type:disc"><strong>Monitor, Keyboard &amp; Mouse (or SSH connection)</strong></li></ul><h3 id="194bc05c-f968-80c3-bd08-d1ea98b0fd88" class=""><strong>🔌 Wiring: Connect RFID-RC522 to Raspberry Pi</strong></h3><table id="194bc05c-f968-806f-8fc1-d18f9ecabe72" class="simple-table"><tbody><tr id="194bc05c-f968-80d0-ab2f-fa2bb0063109"><td id="Nm~a" class=""><strong>RFID-RC522 Pin</strong></td><td id="\W@W" class=""><strong>Raspberry Pi GPIO Pin</strong></td></tr><tr id="194bc05c-f968-8006-bb67-df312b60b22b"><td id="Nm~a" class="">SDA (SS)</td><td id="\W@W" class="">GPIO 8 (CE0)</td></tr><tr id="194bc05c-f968-80da-b33b-f86c4105d0f9"><td id="Nm~a" class="">SCK</td><td id="\W@W" class="">GPIO 11 (SCLK)</td></tr><tr id="194bc05c-f968-8024-bf7b-d11edd027b2e"><td id="Nm~a" class="">MOSI</td><td id="\W@W" class="">GPIO 10 (MOSI)</td></tr><tr id="194bc05c-f968-806f-8c08-caecaa2f1d2a"><td id="Nm~a" class="">MISO</td><td id="\W@W" class="">GPIO 9 (MISO)</td></tr><tr id="194bc05c-f968-8049-9ad1-e3baf0e4ac82"><td id="Nm~a" class="">GND</td><td id="\W@W" class="">GND</td></tr><tr id="194bc05c-f968-80ad-9e5d-c00ff9992991"><td id="Nm~a" class="">RST</td><td id="\W@W" class="">GPIO 25</td></tr><tr id="194bc05c-f968-8070-a942-d0d47f4f23af"><td id="Nm~a" class="">3.3V</td><td id="\W@W" class="">3.3V</td></tr></tbody></table><hr id="194bc05c-f968-80f2-829e-db039f37f804"/><h2 id="194bc05c-f968-80d1-b511-d110de9e2f46" class=""><strong>2️⃣ Install Required Software</strong></h2><p id="194bc05c-f968-80f0-b9f2-d9fe4ef3a2cd" class="">Open the terminal and <strong>run these commands:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8090-9a9e-f4417614a64a" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">bash
+CopyEdit
+sudo apt update
+sudo apt install python3-pip
+pip3 install spidev RPi.GPIO mfrc522 cryptography
+
+</code></pre><hr id="194bc05c-f968-80ec-ad5b-dd309f177dc3"/><h2 id="194bc05c-f968-80aa-a969-e5f625bd30b7" class=""><strong>3️⃣ Demonstrate Attacks</strong></h2><h3 id="194bc05c-f968-805d-b61b-df14f9cd4f29" class=""><strong>🛑 1. Cloning Attack (Copy-Paste RFID)</strong></h3><p id="194bc05c-f968-8072-8c57-cbcea047b936" class="">📌 <strong>What You’ll Do:</strong> Copy an RFID tag’s data to another tag to show how cloning works.</p><h3 id="194bc05c-f968-80ba-8c8b-daa272f0a9c7" class=""><strong>Step-by-Step:</strong></h3><p id="194bc05c-f968-80f9-972f-cf7d02661ace" class="">1️⃣ <strong>Create &amp; Run the Cloning Script</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8031-90bb-fa43f3d29c21" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Place the original tag to read...&quot;)
+    id, text = reader.read()
+    print(f&quot;Read ID: {id}, Data: {text}&quot;)
+
+    print(&quot;Now place the target tag to clone...&quot;)
+    reader.write(text)
+    print(&quot;Tag cloned successfully!&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><p id="194bc05c-f968-8048-b16e-cbbd21730193" class="">2️⃣ <strong>Run the script:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8076-b236-c29b7722496f" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">bash
+CopyEdit
+python3 attacker_clone.py
+
+</code></pre><p id="194bc05c-f968-803e-98c5-c97105310175" class="">3️⃣ <strong>Follow the Instructions:</strong></p><ul id="194bc05c-f968-809e-a26b-ff10721d70a4" class="bulleted-list"><li style="list-style-type:disc">Place the <strong>original tag</strong> → The script <strong>reads the data</strong>.</li></ul><ul id="194bc05c-f968-8035-8a7b-f15b895bd09b" class="bulleted-list"><li style="list-style-type:disc">Place a <strong>blank tag</strong> → The script <strong>writes the cloned data</strong>.</li></ul><ul id="194bc05c-f968-8047-b2ff-d7bca3810e99" class="bulleted-list"><li style="list-style-type:disc"><strong>Scan both tags</strong> → They will have <strong>identical</strong> data.</li></ul><hr id="194bc05c-f968-80f8-b5ae-ccc255bdf3a7"/><h3 id="194bc05c-f968-80d6-8495-e96bdb003f64" class=""><strong>🛑 2. Eavesdropping Attack (Spying on RFID Scans)</strong></h3><p id="194bc05c-f968-80df-bee6-cf88540f04ed" class="">📌 <strong>What You’ll Do:</strong> Simulate an attacker <strong>capturing RFID data remotely</strong>.</p><h3 id="194bc05c-f968-802b-8942-f7079752e2c9" class=""><strong>Step-by-Step:</strong></h3><p id="194bc05c-f968-808b-998e-f553076f6a5f" class="">1️⃣ <strong>Create &amp; Run the Eavesdropping Script</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-80a5-b24a-f6218fcaba87" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import time
+
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Eavesdropping... Press Ctrl+C to stop.&quot;)
+    while True:
+        id, text = reader.read()
+        print(f&quot;Detected Tag ID: {id}, Data: {text}&quot;)
+        with open(&quot;log.txt&quot;, &quot;a&quot;) as log:
+            log.write(f&quot;{time.ctime()} - ID: {id}, Data: {text}\n&quot;)
+        time.sleep(1)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><p id="194bc05c-f968-80a2-9852-c7430288fc92" class="">2️⃣ <strong>Run the script:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8019-9ca6-d31c39c83989" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">bash
+CopyEdit
+python3 attacker_eavesdrop.py
+
+</code></pre><p id="194bc05c-f968-800b-a1cd-f15bf454fe44" class="">3️⃣ <strong>Scan different RFID tags</strong> → The script <strong>logs every scanned tag</strong>, simulating an attacker collecting data.</p><hr id="194bc05c-f968-8006-ab23-f88e5668eacb"/><h2 id="194bc05c-f968-8075-a169-df56475d21eb" class=""><strong>4️⃣ Demonstrate Defenses</strong></h2><h3 id="194bc05c-f968-80d3-8f7c-ce0fc27c024d" class=""><strong>🛡️ 1. AES Encryption (Protect RFID Data)</strong></h3><p id="194bc05c-f968-809f-95c8-d685f226e5c4" class="">📌 <strong>What You’ll Do:</strong> Encrypt RFID data before writing, making it unreadable to attackers.</p><h3 id="194bc05c-f968-8086-9202-cc5b670c12ab" class=""><strong>Step-by-Step:</strong></h3><p id="194bc05c-f968-809d-8419-eb2426a0eea6" class="">1️⃣ <strong>Create &amp; Run the Encryption Script</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-80ea-aeca-df8fef4ceed0" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+from cryptography.fernet import Fernet
+
+# Generate encryption key
+key = Fernet.generate_key()
+cipher = Fernet(key)
+reader = SimpleMFRC522()
+
+try:
+    print(&quot;Enter data to write:&quot;)
+    data = input()
+    encrypted_data = cipher.encrypt(data.encode()).decode()
+
+    print(&quot;Place the tag to write encrypted data...&quot;)
+    reader.write(encrypted_data)
+    print(&quot;Encrypted data written!&quot;)
+
+    print(&quot;Now place the tag to read...&quot;)
+    id, encrypted_text = reader.read()
+    decrypted_text = cipher.decrypt(encrypted_text.encode()).decode()
+    print(f&quot;Decrypted Data: {decrypted_text}&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><p id="194bc05c-f968-8038-bd2a-fe8d9d960ed3" class="">2️⃣ <strong>Run the script:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-8024-978e-cedaed722298" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">bash
+CopyEdit
+python3 defender_encrypt.py
+
+</code></pre><p id="194bc05c-f968-8014-893a-e8ea5ad067be" class="">3️⃣ <strong>Follow the Instructions:</strong></p><ul id="194bc05c-f968-807f-b64c-ca59b4a0c23b" class="bulleted-list"><li style="list-style-type:disc">Enter <strong>data</strong> to write.</li></ul><ul id="194bc05c-f968-8077-b5ce-ee620b8f3de7" class="bulleted-list"><li style="list-style-type:disc">Scan an RFID tag → Data is <strong>encrypted before storing</strong>.</li></ul><ul id="194bc05c-f968-805e-ba3e-dcdf690477d0" class="bulleted-list"><li style="list-style-type:disc">Read the RFID tag → Data is <strong>decrypted back</strong> to the original message.</li></ul><ul id="194bc05c-f968-80d0-a6b8-c47a9b27b536" class="bulleted-list"><li style="list-style-type:disc"><strong>If an attacker clones the tag, they will only get useless encrypted data!</strong></li></ul><hr id="194bc05c-f968-80af-816a-db826ef41551"/><h3 id="194bc05c-f968-8033-9b4d-de85d8852617" class=""><strong>🛡️ 2. Intrusion Detection System (Detect Suspicious Activity)</strong></h3><p id="194bc05c-f968-80eb-9636-c87c7570d23b" class="">📌 <strong>What You’ll Do:</strong> Block RFID access if an <strong>attack is detected</strong> (too many scans too fast).</p><h3 id="194bc05c-f968-8024-84ba-c31a46f88feb" class=""><strong>Step-by-Step:</strong></h3><p id="194bc05c-f968-8054-ad64-db7437d312c5" class="">1️⃣ <strong>Create &amp; Run the IDS Script</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-80e7-91fe-d78661869d2c" class="code"><code class="language-Python" style="white-space:pre-wrap;word-break:break-all">python
+CopyEdit
+import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
+import time
+
+reader = SimpleMFRC522()
+read_attempts = []
+BLOCK_THRESHOLD = 5  # Max allowed reads in 10 seconds
+BLOCK_TIME = 10  # Block time in seconds
+
+def is_attack_detected():
+    now = time.time()
+    read_attempts.append(now)
+    read_attempts[:] = [t for t in read_attempts if now - t &lt; 10]
+    return len(read_attempts) &gt; BLOCK_THRESHOLD
+
+try:
+    print(&quot;IDS Active... Monitoring RFID activity.&quot;)
+    while True:
+        id, text = reader.read()
+        if is_attack_detected():
+            print(&quot;⚠️ Intrusion detected! Blocking further reads for 10 seconds.&quot;)
+            time.sleep(BLOCK_TIME)
+            read_attempts.clear()
+        else:
+            print(f&quot;Read ID: {id}, Data: {text}&quot;)
+
+finally:
+    GPIO.cleanup()
+
+</code></pre><p id="194bc05c-f968-80e8-be13-dd7b338f2bf1" class="">2️⃣ <strong>Run the script:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="194bc05c-f968-809e-9806-ea099ecff72e" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">bash
+CopyEdit
+python3 defender_ids.py
+
+</code></pre><p id="194bc05c-f968-80ff-b521-fc14e70e30af" class="">3️⃣ <strong>Scan an RFID tag multiple times quickly</strong> → Access is <strong>blocked for 10 seconds</strong> if an attack is detected.</p><hr id="194bc05c-f968-8011-b086-f60b95e6eeca"/><h2 id="194bc05c-f968-8082-96ef-f6b7e17b22cc" class=""><strong>5️⃣ Explain the Real-World Application in Kathmandu Valley</strong></h2><p id="194bc05c-f968-803a-a926-cc46cac6616e" class="">📌 <strong>Example 1: Vehicle RFID Tracking</strong></p><ul id="194bc05c-f968-8024-9707-c97b81fd3bf6" class="bulleted-list"><li style="list-style-type:disc">Kathmandu uses <strong>RFID for vehicle tracking</strong> at toll booths and checkpoints.</li></ul><ul id="194bc05c-f968-8031-92ab-eac7f68ddc47" class="bulleted-list"><li style="list-style-type:disc">If <strong>cloning isn’t prevented</strong>, attackers can <strong>bypass tolls</strong> using fake RFID tags.</li></ul><p id="194bc05c-f968-80e8-bf7b-f5878aefa430" class="">📌 <strong>Example 2: Secure Access Control</strong></p><ul id="194bc05c-f968-8004-bc13-f65dd0beea2b" class="bulleted-list"><li style="list-style-type:disc">Offices, hotels, and parking lots in <strong>Nepal use RFID for entry</strong>.</li></ul><ul id="194bc05c-f968-801a-ada0-f631983d48c9" class="bulleted-list"><li style="list-style-type:disc"><strong>Encryption protects card data</strong> from being cloned.</li></ul><ul id="194bc05c-f968-80ee-a8e3-e8c1ce1ce8e5" class="bulleted-list"><li style="list-style-type:disc"><strong>IDS detects suspicious scans</strong>, stopping attackers from brute-force access.</li></ul><hr id="194bc05c-f968-80e7-bb50-dd9ca882dd1c"/><h2 id="194bc05c-f968-80b4-86d8-f4ce60abe2b1" class=""><strong>6️⃣ Summary for Viva Presentation</strong></h2><h3 id="194bc05c-f968-80b0-8d76-e1668c50aa74" class=""><strong>✅ Key Points to Present</strong></h3><p id="194bc05c-f968-80eb-b833-cfb69737fef9" class="">1️⃣ <strong>Show cloning attack</strong> → Unauthorized tag copying.</p><p id="194bc05c-f968-801c-a948-c16e54970c8d" class="">2️⃣ <strong>Show eavesdropping attack</strong> → Secret RFID data logging.</p><p id="194bc05c-f968-80b9-83e8-d0a5d06321c2" class="">3️⃣ <strong>Defend with AES encryption</strong> → Attackers get <strong>useless encrypted data</strong>.</p><p id="194bc05c-f968-802e-bef9-e504f887a220" class="">4️⃣ <strong>Defend with IDS</strong> → Too many scans trigger <strong>RFID lockout</strong>.</p><p id="194bc05c-f968-80b6-9c92-c8b1d3f66db9" class="">5️⃣ <strong>Real-world relevance</strong> → Kathmandu’s <strong>RFID vehicle tracking &amp; access control need security!</strong></p><hr id="194bc05c-f968-80ac-a603-c5708f36e13c"/><h3 id="194bc05c-f968-8013-a795-f4f56642cee6" class="">🚀 <strong>Final Step: Test &amp; Prepare for Your Viva!</strong></h3><ul id="194bc05c-f968-80fa-ace8-da575ca778d9" class="bulleted-list"><li style="list-style-type:disc">Run all scripts <strong>one by one</strong> and practice explaining each step.</li></ul><ul id="194bc05c-f968-8035-8e61-fb63577da498" class="bulleted-list"><li style="list-style-type:disc">Show <strong>how attacks work first</strong>, then <strong>demonstrate the defenses</strong>.</li></ul><ul id="194bc05c-f968-802e-aadf-ca1b36bcce5d" class="bulleted-list"><li style="list-style-type:disc">Relate it to <strong>Nepal’s real-world RFID use cases</strong> (Vehicle tracking, Secure Access).</li></ul><p id="194bc05c-f968-8033-993f-d79bc734eb3c" class="">💡 <strong>Want help with your Viva slides or report?</strong> Let me know! 🎓📜</p></details></li></ul><p id="194bc05c-f968-8005-82c4-ead670e005bb" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
