@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RFID Auth System</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .section { margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>RFID Authentication System</h1>
+    
+    <div class="section">
+        <h2>User Registration</h2>
+        <form action="/signup" method="post">
+            <input type="text" name="username" placeholder="Enter username" required>
+            <button type="submit">Register New RFID Tag</button>
+        </form>
+        <p>Instructions: Enter username and place new RFID tag/card when prompted</p>
+    </div>
+
+    <div class="section">
+        <h2>User Login</h2>
+        <form action="/login" method="post">
+            <button type="submit">Authenticate with RFID</button>
+        </form>
+        <p>Instructions: Place your registered RFID tag/card when prompted</p>
+    </div>
+</body>
+</html>
